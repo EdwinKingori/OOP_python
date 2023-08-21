@@ -10,19 +10,44 @@ class Item:
         assert quantity >= 0, f"quantity {quantity} is not greater than or equal to zero!"
         
         # Assign to self object
-        self.name = name
-        self.price = price
+        self.__name = name
+        self.__price = price
         self.quantity = quantity
         
         #Actions to execute: putting all items into a list
         Item.all.append(self)
 
-    def calculate_total_price(self):
-        return self.price * self.quantity
+    @property
+    def price(self):
+        return self.__price
 
     def apply_discount(self):
-        self.price = self.price * self.pay_rate
+        self.__price = self.__price * self.pay_rate
 
+    def apply_increment(self, increment_value):
+        self.__price = self.__price + self.__price * increment_value
+
+
+    @property
+    #Property Dcorator = read only attribute
+    def name(self):
+        return self.__name
+
+
+    @name.setter
+    def name(self,value):
+        if len(value) > 10:
+            raise Exception("The name is more than 10 characters!")
+
+        else:
+            self.__name = value
+
+
+
+    def calculate_total_price(self):
+        return self.__price * self.quantity
+
+    
     @classmethod
     def instantiate_from_csv(cls):
         with open('items.csv', 'r') as f:
@@ -48,4 +73,24 @@ class Item:
             return False
     #using the __repr__() mmethod to provide a string representation of an object
     def __repr__(self):
-        return f"{self.__class__.__name__}('{self.name}', '{self.price}','{self.quantity}')"
+        return f"{self.__class__.__name__}('{self.name}', '{self.__price}','{self.quantity}')"
+
+
+    def __connect(self, smpt_server):
+        pass
+
+    def __prepare_body(self):
+        return f"""
+        Hello user.
+        We have{self.name}{self.quantity} times.
+        Regards, Dev_Eddy
+        """
+
+    def __send(self):
+        pass
+
+
+    def send_email(self):
+        self.__connect('')
+        self.__prepare_body()
+        self.__send()
